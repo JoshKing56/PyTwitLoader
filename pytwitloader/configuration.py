@@ -4,9 +4,7 @@ import json
 import os
 
 logger = logging.getLogger("main")
-
 config = None
-
 
 def get_twitter_keys():
     config = {}
@@ -17,6 +15,7 @@ def get_twitter_keys():
     else:
         env_vars = os.environ
         try:
+            # TODO: update this with new values
             config["TWITTER_CONSUMER_KEY"] = env_vars["TWITTER_CONSUMER_KEY"]
             config["TWITTER_CONSUMER_SECRET"] = env_vars["TWITTER_CONSUMER_SECRET"]
             config["TWITTER_ACCESS_KEY"] = env_vars["TWITTER_ACCESS_KEY"]

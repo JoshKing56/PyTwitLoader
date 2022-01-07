@@ -1,4 +1,5 @@
 import json
+import re
 import logging
 import os
 import string
@@ -20,10 +21,22 @@ FILETYPES = {"photo": "jpg", "video": "mp4", "animated_gif": "mp4"}
 
 TESTING = 1 # limit number of files parsed
 
+def sanitize_text(text):
+    # Cursed url regex, do not look
+    text = re.sub('(?:(?:(https:){0,1}\/\/))([\w_-]+(?:(?:\.[\w_-]+)+))(?:([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-]){0,1})', '', text)  
+    text = text.rstrip()
+    text = text.replace(".", "")
+    text = text.replace(".", "")
+    text = re.sub('[/\\.:*?<>"|]', '', text)  
+    return text
+
 def get_filename(index, type, text, screen_name):
-    text = text.rsplit(" ", 1)[0] # last "word" in text is always the twitter url. remove this.
+    text = sanitize_text(text)
     extension = FILETYPES[type]
-    filename = f"{screen_name} | {text} | {index}.{extension}"
+    if index:
+        filename = f"{screen_name}_{text}_{index}.{extension}"
+    else:
+        filename = f"{screen_name}_{text}.{extension}"
     filename = filename.replace("\n", " ")
     return filename
 
@@ -33,8 +46,9 @@ def parse_page(liked_page):
             try:
                 media_list = tweet["extended_entities"]["media"]
                 for index, media in enumerate(media_list):
+                    # print(len(media))
                     filename = get_filename(
-                        index + 1,
+                        index + 1 if len(media_list) > 1 else None,
                         media["type"],
                         tweet["text"],
                         tweet["user"]["screen_name"],
