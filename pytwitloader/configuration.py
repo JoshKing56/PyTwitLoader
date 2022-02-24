@@ -6,6 +6,8 @@ import os
 logger = logging.getLogger("main")
 config = None
 
+VARIABLES_LIST = ["TARGET_USER", "DOWNLOAD_DIRECTORY", "TWITTER_BEARER_TOKEN"]
+
 def get_twitter_keys():
     config = {}
     if len(sys.argv) > 1:
@@ -13,13 +15,9 @@ def get_twitter_keys():
         with open(filename, "r") as config_file:
             config = json.load(config_file)
     else:
-        env_vars = os.environ
         try:
-            # TODO: update this with new values
-            config["TWITTER_CONSUMER_KEY"] = env_vars["TWITTER_CONSUMER_KEY"]
-            config["TWITTER_CONSUMER_SECRET"] = env_vars["TWITTER_CONSUMER_SECRET"]
-            config["TWITTER_ACCESS_KEY"] = env_vars["TWITTER_ACCESS_KEY"]
-            config["TWITTER_ACCESS_SECRET"] = env_vars["TWITTER_ACCESS_SECRET"]
+            for env_var in VARIABLES_LIST:
+                config[env_var] = os.environ[env_var]
         except KeyError:
             logger.exception(
                 "No config file passed, and no environment variables found"

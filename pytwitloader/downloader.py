@@ -12,7 +12,15 @@ def download_image(url, filename):
     #         shutil.copyfileobj(res.raw, f) 
     # else:
     #     logger.DEBUG('Could not download: {filename} Url: {url}')
-    print(f"Downloading: {filename}")
+    # print(f"Downloading: {filename}")
+    print(f"Downloading: {url}")
 
 def download_video(url, filename):
-    print(f"Downloading: {filename}")
+    r = requests.get(url, stream = True) 
+
+    # download started 
+    with open(filename, 'wb') as f: 
+        for chunk in r.iter_content(chunk_size = 1024*1024): 
+            if chunk: 
+                f.write(chunk) 
+    print(f"Downloading: {url}")

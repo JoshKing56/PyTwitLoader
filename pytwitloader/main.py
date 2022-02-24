@@ -1,4 +1,5 @@
 import json
+from pprint import pprint
 import re
 import logging
 import os
@@ -19,16 +20,21 @@ logger.addHandler(file_handler)
 # Gifs are stored as mp4s on twitter
 FILETYPES = {"photo": "jpg", "video": "mp4", "animated_gif": "mp4"}
 
-TESTING = 1 # limit number of files parsed
+TESTING = 1  # limit number of files parsed
 
 def sanitize_text(text):
     # Cursed url regex, do not look
-    text = re.sub('(?:(?:(https:){0,1}\/\/))([\w_-]+(?:(?:\.[\w_-]+)+))(?:([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-]){0,1})', '', text)  
+    text = re.sub(
+        "(?:(?:(https:){0,1}\/\/))([\w_-]+(?:(?:\.[\w_-]+)+))(?:([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-]){0,1})",
+        "",
+        text,
+    )
     text = text.rstrip()
     text = text.replace(".", "")
     text = text.replace(".", "")
-    text = re.sub('[/\\.:*?<>"|]', '', text)  
+    text = re.sub('[/\\.:*?<>"|]', "", text)
     return text
+
 
 def get_filename(index, type, text, screen_name):
     text = sanitize_text(text)
@@ -39,6 +45,7 @@ def get_filename(index, type, text, screen_name):
         filename = f"{screen_name}_{text}.{extension}"
     filename = filename.replace("\n", " ")
     return filename
+
 
 def parse_page(liked_page):
     for tweet in liked_page:
@@ -77,13 +84,15 @@ def main():
         if not liked_page:
             break
         parse_page(liked_page)
-        max_id = liked_page[-1]["id"] - 1 #Need to use -1 because passing previous id as is returns that tweet
+        max_id = (
+            liked_page[-1]["id"] - 1
+        )  # Need to use -1 because passing previous id as is returns that tweet
         tweet_count += len(liked_page)
-    print(f"Processed {tweet_count} tweets") 
-    
+    print(f"Processed {tweet_count} tweets")
 
-    
+
 if __name__ == "__main__":
     # input_text = "Maison Margiela Fall 2016 RTW https://t.co/BZSMUGZYeU"
     # print(get_filename(None, input_text, None))
-    main()
+    pprint(config)
+    # main()
