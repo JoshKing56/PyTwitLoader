@@ -1,8 +1,0 @@
-.gitignore
-poetry.lock
-__pycache__/
-*.log
-.vscode
-.pytest_cache/
-test.Dockerfile
-twitter_keys.json
