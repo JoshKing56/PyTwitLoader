@@ -44,6 +44,10 @@ def get_filename(index, type, text, screen_name):
     else:
         filename = f"{screen_name}_{text}.{extension}"
     filename = filename.replace("\n", " ")
+    filename = f'{config["DOWNLOAD_DIRECTORY"]}/{filename}'
+    if len(filename) > 50:
+        print(filename)
+        filename = filename[:50]
     return filename
 
 
@@ -94,5 +98,4 @@ def main():
 if __name__ == "__main__":
     # input_text = "Maison Margiela Fall 2016 RTW https://t.co/BZSMUGZYeU"
     # print(get_filename(None, input_text, None))
-    pprint(config)
-    # main()
+    main()
